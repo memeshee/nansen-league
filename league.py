@@ -85,6 +85,15 @@ def settle(wallet_pnls: dict) -> dict:
     return {"round": rid, "scores": scores}
 
 
+def round_info() -> dict:
+    rid = current_round()
+    conn = _db()
+    row = conn.execute("SELECT ends_at FROM rounds WHERE id=?", (rid,)).fetchone()
+    n = conn.execute("SELECT COUNT(*) FROM picks WHERE round_id=?", (rid,)).fetchone()[0]
+    conn.close()
+    return {"round": rid, "ends_at": row[0] if row else 0, "picks": n}
+
+
 def save_dossier(mint: str, chain: str, conviction: int, action: str, price: float, detail: str) -> int:
     conn = _db()
     cur = conn.execute(
