@@ -23,7 +23,7 @@ ACTION_BUDGET = {
     "record": 4,   # /record grading: up to 4 ohlcv refreshes (1cr each)
     "settle": 5,   # weekly settlement leaderboard call
 }
-DAILY_CAP = 60  # hard stop per UTC day; demo budget ~500-800 total
+DAILY_CAP = 100  # hard stop per UTC day; seeding week burns ~50/day, balance is 5 figures
 SPEND_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".spend_log.jsonl")
 
 
