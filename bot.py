@@ -147,7 +147,7 @@ async def draft(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     try:
         res = league.draft(update.effective_user.id, ctx.args[0])
         await update.message.reply_text(
-            f"Drafted `{ctx.args[0][:12]}…` into round {res['round']} ({res['slots_left']} slots left)"
+            f"Drafted `{ctx.args[0][:12]}…` into round {res['round']} ({res['slots_left']} of your {league.PICKS_PER_USER} picks left)"
             if res["ok"] else res["error"],
             parse_mode="Markdown",
         )
@@ -163,7 +163,7 @@ async def picks(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("No picks yet — /board then /draft <wallet>")
         return
     await update.message.reply_text(
-        "Your picks:\n" + "\n".join(f"• `{p['wallet'][:12]}…`" for p in ps), parse_mode="Markdown"
+        f"Your picks ({len(ps)}/{league.PICKS_PER_USER} this round):\n" + "\n".join(f"• `{p['wallet'][:12]}…`" for p in ps), parse_mode="Markdown"
     )
 
 
