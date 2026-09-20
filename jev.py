@@ -7,6 +7,7 @@ against known-good/bad tokens before trusting them live.
 """
 import json
 import os
+import time
 import urllib.request
 
 API_URL = "https://api.typesafe.ai/v1/systemone"
@@ -20,17 +21,28 @@ def _api_key() -> str:
         return f.read().strip()
 
 
-def judge(state: dict, questions: dict) -> dict:
-    """Single batched request. Returns {answers, usage} or raises."""
+def judge(state: dict, questions: dict, retries: int = 3) -> dict:
+    """Single batched request. Returns {answers, usage} or raises.
+
+    Retries transient network blips with backoff — host egress is flaky
+    and a single SSL handshake timeout shouldn't fail a user command.
+    """
     body = json.dumps({"state": state, "model": MODEL, "questions": questions}).encode()
-    req = urllib.request.Request(
-        API_URL,
-        data=body,
-        headers={"Authorization": f"Bearer {_api_key()}", "Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        out = json.loads(resp.read().decode())
-    return {"answers": out["answers"], "usage": out.get("usage", {}), "model": out.get("model", "")}
+    last: Exception = RuntimeError("jev request failed")
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(
+                API_URL,
+                data=body,
+                headers={"Authorization": f"Bearer {_api_key()}", "Content-Type": "application/json"},
+            )
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                out = json.loads(resp.read().decode())
+            return {"answers": out["answers"], "usage": out.get("usage", {}), "model": out.get("model", "")}
+        except Exception as e:
+            last = e
+            time.sleep(2 * (attempt + 1))
+    raise last
 
 
 BULLISH_CRITERIA = [
@@ -89,6 +101,142 @@ def triage_token(ctx: dict) -> dict:
         "guard_p": guard_p,
         "verdict": verdict,
         "plan": plan,
+        "usage": res["usage"],
+    }
+
+
+ACCUMULATION_CRITERIA = [
+    "Weak hands: buyers are mostly unknown or unlabeled wallets, small size, no smart-money presence",
+    "Mixed crowd: some labeled buyers but no dominant smart-money conviction",
+    "Smart accumulation: labeled smart-money wallets buying size, repeat buyers, low seller overlap",
+]
+
+WHALE_RISK_CRITERIA = [
+    "Diffuse: holders spread out, no single wallet can move the price",
+    "Watchable: some concentration but active two-sided flow",
+    "Fragile: top holders dominate supply and show distribution — one exit dumps the price",
+]
+
+ACTION_CRITERIA = {
+    "accumulate": "Smart money is buying with size into a healthy structure — take exposure",
+    "watch": "Mixed signals, thin data, or low confidence — wait for clarity, do not act yet",
+    "avoid": "Distribution, whale concentration, or dump in progress — stay out",
+}
+
+
+def dossier(state: dict) -> dict:
+    """One batched 5-question Jev request over assembled Nansen evidence.
+
+    Returns per-dimension answers plus a code-composed conviction score
+    (0-100). Code owns the weights and gates; Jev supplies the judgments.
+    """
+    res = judge(
+        state,
+        {
+            "bullishness": {
+                "type": "score",
+                "instructions": "How bullish is this token's smart-money flow?",
+                "criteria": BULLISH_CRITERIA,
+            },
+            "accumulation": {
+                "type": "score",
+                "instructions": "Who is buying this token — smart money with conviction, or an unknown crowd?",
+                "criteria": ACCUMULATION_CRITERIA,
+            },
+            "whale_risk": {
+                "type": "score",
+                "instructions": "How fragile is this token's holder structure to a whale exit?",
+                "criteria": WHALE_RISK_CRITERIA,
+            },
+            "dumping": {
+                "type": "noul",
+                "instructions": "Are top holders actively distributing (selling into strength) right now?",
+            },
+            "action": {
+                "type": "choice",
+                "instructions": "What should a trader do about this token right now?",
+                "criteria": ACTION_CRITERIA,
+            },
+        },
+    )
+    a = res["answers"]
+    bull = a["bullishness"]["score"] / 2 * 100
+    acc = a["accumulation"]["score"] / 2 * 100
+    safe = (2 - a["whale_risk"]["score"]) / 2 * 100
+    dump_p = a["dumping"]["noul"]
+    act = a["action"]["choice"]
+    act_conf = a["action"].get("confidence", 0.0)
+    conviction = round(0.4 * bull + 0.3 * acc + 0.2 * safe + 0.1 * act_conf * 100)
+    if act == "avoid" or dump_p > 0.7:
+        conviction = min(conviction, 25)
+    if act == "watch":
+        conviction = min(conviction, 55)
+    confs = [
+        a["bullishness"].get("confidence", 0.0),
+        a["accumulation"].get("confidence", 0.0),
+        a["whale_risk"].get("confidence", 0.0),
+        act_conf,
+    ]
+    avg_conf = sum(confs) / len(confs)
+    return {
+        "bull": round(bull),
+        "acc": round(acc),
+        "safe": round(safe),
+        "dump_p": round(dump_p, 2),
+        "action": act,
+        "act_conf": round(act_conf, 2),
+        "conviction": conviction,
+        "avg_conf": round(avg_conf, 2),
+        "escalate": avg_conf < VERDICT_MIN_CONF,
+        "usage": res["usage"],
+    }
+
+
+CONSISTENCY_CRITERIA = [
+    "One-hit wonder: a single lucky trade dominates, the rest is noise",
+    "Streaky: some repeat wins but high variance across tokens",
+    "Consistent: repeat realized profits across multiple tokens and weeks",
+]
+
+DEGEN_CRITERIA = [
+    "Disciplined: sized bets, takes profit, diverse book",
+    "Punty: some oversized bets but survives them",
+    "Degen: all-in gambles, round-trips winners, blows up often",
+]
+
+
+def scout_wallet(state: dict) -> dict:
+    """Two-question Jev batch over profiler evidence. Grade composed in code."""
+    res = judge(
+        state,
+        {
+            "consistency": {
+                "type": "score",
+                "instructions": "How consistent is this wallet's trading edge?",
+                "criteria": CONSISTENCY_CRITERIA,
+            },
+            "degen": {
+                "type": "score",
+                "instructions": "How reckless is this wallet's risk behavior?",
+                "criteria": DEGEN_CRITERIA,
+            },
+        },
+    )
+    a = res["answers"]
+    con, dg = a["consistency"]["score"], a["degen"]["score"]
+    if con >= 1.33 and dg <= 0.67:
+        grade = "S"
+    elif con >= 1.0 and dg <= 1.0:
+        grade = "A"
+    elif con >= 0.67 or dg <= 1.33:
+        grade = "B"
+    else:
+        grade = "C"
+    return {
+        "consistency": round(con, 2),
+        "degen": round(dg, 2),
+        "grade": grade,
+        "conf": round((a["consistency"].get("confidence", 0) + a["degen"].get("confidence", 0)) / 2, 2),
         "usage": res["usage"],
     }
 

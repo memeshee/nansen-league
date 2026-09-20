@@ -21,6 +21,10 @@ def _db() -> sqlite3.Connection:
         "PRIMARY KEY (user_id, wallet, round_id))"
     )
     conn.execute("CREATE TABLE IF NOT EXISTS rounds (id INTEGER PRIMARY KEY, ends_at INTEGER, winner INTEGER)")
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS dossiers (id INTEGER PRIMARY KEY AUTOINCREMENT, mint TEXT, chain TEXT, "
+        "ts INTEGER, conviction INTEGER, action TEXT, price REAL, detail TEXT)"
+    )
     return conn
 
 
@@ -79,3 +83,27 @@ def settle(wallet_pnls: dict) -> dict:
         conn.commit()
     conn.close()
     return {"round": rid, "scores": scores}
+
+
+def save_dossier(mint: str, chain: str, conviction: int, action: str, price: float, detail: str) -> int:
+    conn = _db()
+    cur = conn.execute(
+        "INSERT INTO dossiers (mint, chain, ts, conviction, action, price, detail) VALUES (?,?,?,?,?,?,?)",
+        (mint, chain, int(time.time()), conviction, action, price, detail),
+    )
+    conn.commit()
+    did = cur.lastrowid or 0
+    conn.close()
+    return did
+
+
+def list_dossiers(limit: int = 5) -> list:
+    conn = _db()
+    rows = conn.execute(
+        "SELECT id, mint, chain, ts, conviction, action, price FROM dossiers ORDER BY id DESC LIMIT ?", (limit,)
+    ).fetchall()
+    conn.close()
+    return [
+        {"id": i, "mint": m, "chain": c, "ts": t, "conviction": v, "action": a, "price": p}
+        for i, m, c, t, v, a, p in rows
+    ]

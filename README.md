@@ -36,7 +36,19 @@ cp .env.example .env   # fill NANSEN_API_KEY + TELEGRAM_BOT_TOKEN
 python bot.py
 ```
 
-Commands: `/start /check <mint> [chain] /board /draft <wallet> /picks /settle`
+Commands: `/start /check <mint> /deep <mint> /record /board /draft <wallet> /picks /settle /budget`
+
+- `/deep` (flagship, 10cr): 6 Nansen endpoints in parallel (flows,
+  buyers, sellers, flow-intelligence, OHLCV, holders) → ONE batched
+  5-question Jev request (bullishness + accumulation + whale-risk scores,
+  dump-risk noul, accumulate/watch/avoid choice) → code-composed 0-100
+  conviction with gates. ~6s end-to-end. Stored for grading.
+- `/record` (1cr per dossier): grades past dossiers vs subsequent price —
+  the validation loop judges can re-run. Hit-rate table.
+- `/draft` (+2cr scout): profiler pnl-summary + balances → Jev
+  consistency/degen scores → S/A/B/C grade. Entry fees cover query
+  costs — the game economy.
+- `/budget`: today's spend vs 60cr cap, per-endpoint breakdown.
 
 Budgets: per-action caps (glance 1cr, deep 6cr, settle 5cr), 60cr/day hard
 stop, 10-min cache so re-renders don't re-burn. Spend logged to
