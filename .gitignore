@@ -1,0 +1,5 @@
+.env
+league.db
+.nansen_cache/
+.spend_log.jsonl
+__pycache__/
