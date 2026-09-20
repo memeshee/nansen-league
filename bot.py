@@ -125,7 +125,7 @@ async def board(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
             w = r.get("address", "?")
             pnl = r.get("total_pnl_usd", 0) or 0
             wr = r.get("win_rate", 0) or 0
-            lines.append(f"{i}. `{w[:8]}…` ${pnl:,.0f} PnL, {wr:.0%} win")
+            lines.append(f"{i}. ${pnl:,.0f} PnL · {wr:.0%} win\n`{w}`")
         await status.edit_text(
             "Top smart-money wallets (7d, Solana):\n" + "\n".join(lines)
             + f"\n\n{'(cached, 0cr)' if res.get('cached') else '(live, 5cr)'} — /draft <wallet> to pick one",
