@@ -3,48 +3,71 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a0e14">
+<meta name="description" content="Fantasy Smart Money League — Nansen data, Jev verdicts, weekly draft rounds.">
+<meta property="og:title" content="Smart Money League — Nansen × Jev trading desk">
+<meta property="og:description" content="Draft proven wallets. Every token gets a 0–100 Jev conviction dossier in ~6s. Track record graded live.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>Smart Money League — Nansen × Jev trading desk</title>
 <style>
-:root{--bg:#0a0e14;--card:#111823;--line:#1e2a3a;--txt:#dbe4f0;--dim:#7d8ea3;--up:#22c55e;--down:#ef4444;--warn:#f59e0b;--acc:#38bdf8}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,sans-serif}
-.wrap{max-width:1060px;margin:0 auto;padding:24px 16px 64px}
-.hero{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:28px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#0d1522,#101b2c)}
-.hero h1{margin:0 0 6px;font-size:28px}.hero p{margin:0;color:var(--dim);max-width:640px}
-.live{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--up)}.live i{width:8px;height:8px;border-radius:50%;background:var(--up);animation:bl 2s infinite}@keyframes bl{50%{opacity:.3}}
-.btn{display:inline-block;padding:10px 18px;border-radius:10px;background:var(--acc);color:#04121d;font-weight:700;text-decoration:none;border:0;cursor:pointer;font-size:14px}
-.btn.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-.card h2{margin:0 0 4px;font-size:16px}.card .sub{color:var(--dim);font-size:13px;margin-bottom:12px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+:root{--bg:#0a0e14;--card:#101724;--card2:#0c1220;--line:#1e2a3a;--txt:#dbe4f0;--dim:#7d8ea3;--up:#22c55e;--down:#ef4444;--warn:#f59e0b;--acc:#38bdf8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 400px at 50% -100px,#12233a 0%,var(--bg) 60%),var(--bg);color:var(--txt);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+.hero{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;padding:30px 28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,rgba(56,189,248,.08),transparent 45%),linear-gradient(135deg,#0d1522,#101b2c)}
+.hero h1{margin:8px 0;font-size:clamp(24px,4vw,32px);letter-spacing:-.02em;line-height:1.15}.hero p{margin:0;color:var(--dim);max-width:620px}
+.logo{display:inline-flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.14em;font-size:12px;color:var(--acc);text-transform:uppercase}
+.logo img{width:26px;height:26px}
+.live{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--up);font-weight:600;letter-spacing:.04em}.live i{width:8px;height:8px;border-radius:50%;background:var(--up);animation:bl 2s infinite}@keyframes bl{50%{opacity:.25}}
+.btn{display:inline-block;padding:11px 20px;border-radius:11px;background:var(--acc);color:#04121d;font-weight:700;text-decoration:none;border:0;cursor:pointer;font-size:14px;transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(56,189,248,.35)}
+.btn.ghost{background:rgba(56,189,248,.08);color:var(--acc);border:1px solid rgba(56,189,248,.4)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.chip{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:7px 13px;font-size:13px}
+.chip b{font-variant-numeric:tabular-nums}.chip span{color:var(--dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:16px}
+.card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:15px;padding:20px;transition:border-color .2s}
+.card:hover{border-color:#2b3d55}
+.card h2{margin:0;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#aebdce;font-size:13px}.card .sub{color:var(--dim);font-size:13px;margin:2px 0 10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
 .row:first-of-type{border-top:0}
-.mono{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:#0a0f18;padding:3px 7px;border-radius:6px;word-break:break-all}
-.pill{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
-.accumulate{background:rgba(34,197,94,.15);color:var(--up)}.avoid{background:rgba(239,68,68,.15);color:var(--down)}.watch{background:rgba(245,158,11,.15);color:var(--warn)}
-.bar{height:8px;border-radius:4px;background:#0a0f18;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--warn),var(--up))}
-.copy{cursor:pointer;border:1px solid var(--line);background:#0a0f18;color:var(--acc);border-radius:8px;padding:5px 10px;font-size:12px;white-space:nowrap}
-.copy:hover{border-color:var(--acc)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:#080d16;border:1px solid var(--line);padding:3px 8px;border-radius:7px;word-break:break-all}
+.pill{font-size:10.5px;font-weight:800;letter-spacing:.06em;padding:3px 10px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
+.accumulate{background:rgba(34,197,94,.14);color:var(--up)}.avoid{background:rgba(239,68,68,.14);color:var(--down)}.watch{background:rgba(245,158,11,.14);color:var(--warn)}
+.bar{height:8px;border-radius:4px;background:#080d16;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--warn),var(--up));transition:width .6s}
+.copy{cursor:pointer;border:1px solid var(--line);background:#080d16;color:var(--acc);border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600;white-space:nowrap;transition:border-color .15s,background .15s}
+.copy:hover{border-color:var(--acc);background:rgba(56,189,248,.08)}
 .mut{color:var(--dim);font-size:13px}.good{color:var(--up)}.bad{color:var(--down)}
-.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:13px}
-.flow b{background:#0a0f18;border:1px solid var(--line);padding:4px 10px;border-radius:8px}.flow span{color:var(--dim)}
-footer{margin-top:28px;color:var(--dim);font-size:13px;display:flex;gap:16px;flex-wrap:wrap}
-footer a{color:var(--acc)}
+.num{font-variant-numeric:tabular-nums}
+.donut{flex:none}
+.dos-main{min-width:0}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px;font-size:13px}
+.flow b{background:#080d16;border:1px solid var(--line);padding:5px 11px;border-radius:9px;font-weight:600}.flow span{color:var(--dim)}
+footer{margin-top:30px;color:var(--dim);font-size:13px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--acc);text-decoration:none}footer a:hover{text-decoration:underline}
 #upd{font-size:12px;color:var(--dim)}
+.rank{font-weight:800;width:26px;color:var(--dim);font-variant-numeric:tabular-nums}
+svg text{font-family:inherit}
+@media(max-width:560px){.hero{padding:22px 18px}.row{font-size:13px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hero">
     <div>
-      <span class="live"><i></i> LIVE · Nansen data → Jev verdicts</span>
-      <h1>Fantasy Smart Money League</h1>
-      <p>Draft proven wallets. Every token gets a 0–100 Jev conviction dossier from 6 Nansen endpoints in ~6s. Track record graded on-chain-price. Act in Telegram.</p>
-      <p style="margin-top:12px"><a class="btn" id="openbot" href="#" target="_blank">Open the bot</a>
+      <span class="logo"><img src="/favicon.svg" alt=""> Smart Money League</span>
+      <h1>Nansen data in.<br>Jev verdicts out.</h1>
+      <p>Draft proven wallets into weekly rounds. Every token gets a 0–100 conviction dossier from 6 Nansen endpoints in ~6s — graded against real prices. Act in Telegram.</p>
+      <p style="margin-top:14px"><a class="btn" id="openbot" href="#" target="_blank">Open the bot</a>
       <a class="btn ghost" href="https://github.com/memeshee/nansen-league" target="_blank">GitHub</a></p>
+      <div class="chips">
+        <div class="chip"><b id="c-dos">–</b> <span>dossiers</span></div>
+        <div class="chip"><b id="c-hit">–</b> <span>hit rate</span></div>
+        <div class="chip"><b id="c-spent">–</b> <span>burned today</span></div>
+      </div>
     </div>
-    <div class="card" style="min-width:240px"><h2>Round <span id="round">–</span></h2>
+    <div class="card" style="min-width:250px"><h2><span class="live"><i></i> Round <span id="round">–</span> live</span></h2>
       <div class="sub"><span id="picks">–</span> picks · ends <span id="ends">–</span></div>
-      <div class="sub">Today: <span id="spent">–</span> · <span id="upd">–</span></div>
+      <div class="sub">Today: <span id="spent">–</span><br><span id="upd">–</span></div>
     </div>
   </div>
 
@@ -53,7 +76,7 @@ footer a{color:var(--acc)}
     <div class="card"><h2>Smart-money leaderboard</h2><div class="sub">7d Solana · <span id="bstat">–</span> · copy → /draft</div><div id="board"></div></div>
   </div>
   <div class="grid">
-    <div class="card"><h2>Track record</h2><div class="sub" id="hitrate">Dossiers graded vs later price</div><div id="record"></div></div>
+    <div class="card"><h2>Track record</h2><div class="sub" id="hitrate">Dossiers graded vs later price</div><div id="scatter"></div><div id="record"></div></div>
     <div class="card"><h2>Credit economy</h2><div class="sub">Jev guards every call · hard caps enforced</div><div id="budget"></div>
       <div class="flow"><b>Nansen data</b><span>→</span><b>Jev triage + verdicts</b><span>→</span><b>Telegram game</b></div>
     </div>
@@ -66,27 +89,39 @@ const $=id=>document.getElementById(id);
 async function j(p){try{const r=await fetch(p);return await r.json()}catch(e){return{error:String(e)}}}
 function copy(t,btn){navigator.clipboard.writeText(t).then(()=>{const o=btn.textContent;btn.textContent="copied ✓";setTimeout(()=>btn.textContent=o,1200)})}
 function ago(ts){const s=Math.max(0,Date.now()/1000-ts);if(s<90)return"just now";if(s<3600)return Math.floor(s/60)+"m ago";if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago"}
+const ACTC={accumulate:"#22c55e",avoid:"#ef4444",watch:"#f59e0b"};
+function donut(v,act){const c=ACTC[act]||"#7d8ea3";return `<svg class="donut" width="52" height="52" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.9" fill="none" stroke="#080d16" stroke-width="5"/><circle cx="21" cy="21" r="15.9" fill="none" stroke="${c}" stroke-width="5" stroke-dasharray="${v} 100" stroke-linecap="round" transform="rotate(-90 21 21)"/><text x="21" y="25.5" text-anchor="middle" font-size="11" font-weight="800" fill="#dbe4f0">${v}</text></svg>`}
+const MEDAL=["🥇","🥈","🥉"];
+function scatter(ds){const g=ds.filter(d=>d.ret!==null&&d.ret!==undefined);if(g.length<2)return `<p class="mut">Calibration scatter needs 2+ graded calls — check back after /record runs.</p>`;
+  const X=v=>12+(v/100)*236, Y=r=>{const c=Math.max(-30,Math.min(30,r));return 75-(c/30)*62};
+  return `<svg viewBox="0 0 260 150" style="width:100%;margin:4px 0 8px"><line x1="12" y1="75" x2="248" y2="75" stroke="#1e2a3a"/><line x1="12" y1="13" x2="12" y2="137" stroke="#1e2a3a"/>
+  <text x="248" y="146" font-size="9" fill="#7d8ea3" text-anchor="end">conviction →</text><text x="14" y="22" font-size="9" fill="#7d8ea3">+return</text>`+
+  g.map(d=>`<circle cx="${X(d.conviction).toFixed(0)}" cy="${Y(d.ret).toFixed(0)}" r="6" fill="${d.good?"#22c55e":"#ef4444"}" opacity=".85"><title>${d.mint.slice(0,8)}… ${d.action} @${d.conviction}: ${d.ret}%</title></circle>`).join("")+`</svg>`}
 async function tick(){
   const [dos,brd,rec,bud,rnd]=await Promise.all([j("/api/dossiers"),j("/api/board"),j("/api/record"),j("/api/budget"),j("/api/round")]);
   if(rnd.bot){BOT=rnd.bot;const u="https://t.me/"+BOT;$("openbot").href=u;$("footbot").href=u}
   if(rnd.round){$("round").textContent=rnd.round;$("picks").textContent=rnd.picks;$("ends").textContent=rnd.ends_at?new Date(rnd.ends_at*1000).toLocaleDateString():"—"}
   if(bud.spent!==undefined){$("spent").textContent=bud.spent+"/"+bud.cap+"cr · "+bud.dossiers+" dossiers";
-    $("budget").innerHTML=`<div class="row"><span>Burned today</span><b>${bud.spent} / ${bud.cap}cr</b></div><div class="bar"><i style="width:${Math.min(100,bud.spent/bud.cap*100)}%"></i></div>`+
-    (bud.breakdown||[]).slice(0,6).map(b=>`<div class="row"><span class="mono">${b.cmd}</span><span>${b.credits}cr · ${b.calls}×</span></div>`).join("")}
+    $("c-spent").textContent=bud.spent+"/"+bud.cap+"cr";$("c-dos").textContent=bud.dossiers;
+    $("budget").innerHTML=`<div class="row"><span>Burned today</span><b class="num">${bud.spent} / ${bud.cap}cr</b></div><div class="bar"><i style="width:${Math.min(100,bud.spent/bud.cap*100)}%"></i></div>`+
+    (bud.breakdown||[]).slice(0,6).map(b=>`<div class="row"><span class="mono">${b.cmd}</span><span class="num">${b.credits}cr · ${b.calls}×</span></div>`).join("")}
   if(dos.dossiers&&dos.dossiers.length){$("dossiers").innerHTML=dos.dossiers.slice(0,5).map(d=>`
-    <div class="row"><div><span class="pill ${d.action}">${d.action}</span> <b>${d.conviction}/100</b><br>
-    <span class="mono">${d.mint.slice(0,12)}…</span> <span class="mut">@ $${(d.price||0).toLocaleString()} · ${ago(d.ts)}</span></div>
+    <div class="row"><div style="display:flex;gap:12px;align-items:center">${donut(d.conviction,d.action)}
+    <div class="dos-main"><span class="pill ${d.action}">${d.action}</span><br>
+    <span class="mono">${d.mint.slice(0,12)}…</span> <span class="mut">@ $${(d.price||0).toLocaleString()} · ${ago(d.ts)}</span></div></div>
     <button class="copy" onclick="copy('/check ${d.mint}',this)">/check</button></div>`).join("")}
   if(brd.rows){$("bstat").textContent=brd.cached?"cached · 0cr":"live · 5cr";
-    $("board").innerHTML=brd.rows.map(r=>`
-    <div class="row"><div>$${(r.pnl||0).toLocaleString(undefined,{maximumFractionDigits:0})} PnL · ${((r.win_rate||0)*100).toFixed(0)}% win · ${r.trades||0} trades<br>
-    <span class="mono">${r.address.slice(0,20)}…</span></div>
+    $("board").innerHTML=brd.rows.map((r,i)=>`
+    <div class="row"><div><span class="rank">${MEDAL[i]||(i+1)+"."}</span> <b class="num">$${(r.pnl||0).toLocaleString(undefined,{maximumFractionDigits:0})}</b> <span class="mut">· ${((r.win_rate||0)*100).toFixed(0)}% win · ${r.trades||0} trades</span><br>
+    <span class="mono">${r.address.slice(0,22)}…</span></div>
     <button class="copy" onclick="copy('/draft ${r.address}',this)">/draft</button></div>`).join("")}
-  if(rec.dossiers){$("hitrate").textContent=`Hit rate: ${rec.hits}/${rec.graded}`+(rec.graded?` (${Math.round(rec.hits/rec.graded*100)}%)`:"");
+  if(rec.dossiers){const rate=rec.graded?`${rec.hits}/${rec.graded} (${Math.round(rec.hits/rec.graded*100)}%)`:"—";
+    $("hitrate").textContent=`Hit rate: ${rate}`;$("c-hit").textContent=rate;
+    $("scatter").innerHTML=scatter(rec.dossiers);
     $("record").innerHTML=rec.dossiers.map(d=>`
     <div class="row"><span><b class="${d.good===undefined?'':(d.good?'good':'bad')}">${d.good===undefined?'?':(d.good?'✓':'✗')}</b>
     <span class="pill ${d.action}">${d.action}</span> <span class="mono">${d.mint.slice(0,8)}…</span></span>
-    <span>${d.ret===null||d.ret===undefined?"no data":(d.ret>=0?"+":"")+d.ret+"%"}</span></div>`).join("")}
+    <span class="num">${d.ret===null||d.ret===undefined?"no data":(d.ret>=0?"+":"")+d.ret+"%"}</span></div>`).join("")}
   $("upd").textContent="updated "+new Date().toLocaleTimeString();
 }
 tick();setInterval(tick,20000);
