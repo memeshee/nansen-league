@@ -14,6 +14,7 @@ import league
 import nansen_client
 
 PORT = int(os.environ.get("DASHBOARD_PORT", "8765"))
+HOST = os.environ.get("DASHBOARD_HOST", "127.0.0.1")
 BOT_USERNAME = os.environ.get("TELEGRAM_BOT_USERNAME", "righttofight_bot")
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATIC = os.path.join(HERE, "static")
@@ -116,6 +117,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    srv = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
-    print(f"LeagueDesk on 127.0.0.1:{PORT}", flush=True)
+    srv = ThreadingHTTPServer((HOST, PORT), Handler)
+    print(f"LeagueDesk on {HOST}:{PORT}", flush=True)
     srv.serve_forever()
