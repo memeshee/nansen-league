@@ -36,6 +36,8 @@
 .bar{height:8px;border-radius:4px;background:#080d16;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--warn),var(--up));transition:width .6s}
 .copy{cursor:pointer;border:1px solid var(--line);background:#080d16;color:var(--acc);border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600;white-space:nowrap;transition:border-color .15s,background .15s}
 .copy:hover{border-color:var(--acc);background:rgba(56,189,248,.08)}
+.addr{cursor:pointer;transition:border-color .15s}
+.addr:hover{border-color:var(--acc)}
 .mut{color:var(--dim);font-size:13px}.good{color:var(--up)}.bad{color:var(--down)}
 .num{font-variant-numeric:tabular-nums}
 .donut{flex:none}
@@ -73,7 +75,7 @@ svg text{font-family:inherit}
 
   <div class="grid">
     <div class="card"><h2>Conviction board</h2><div class="sub">Latest /deep dossiers · tap to copy /check</div><div id="dossiers"><p class="mut">No dossiers yet — run /deep &lt;mint&gt; in the bot.</p></div></div>
-    <div class="card"><h2>Smart-money leaderboard</h2><div class="sub">7d Solana · <span id="bstat">–</span> · copy → /draft</div><div id="board"></div></div>
+    <div class="card"><h2>Smart-money leaderboard</h2><div class="sub">7d Solana · <span id="bstat">–</span> · tap address to copy, /draft to play</div><div id="board"></div></div>
   </div>
   <div class="grid">
     <div class="card"><h2>Track record</h2><div class="sub" id="hitrate">Dossiers graded vs later price</div><div id="scatter"></div><div id="record"></div></div>
@@ -113,7 +115,7 @@ async function tick(){
   if(brd.rows){$("bstat").textContent=brd.cached?"cached · 0cr":"live · 5cr";
     $("board").innerHTML=brd.rows.map((r,i)=>`
     <div class="row"><div><span class="rank">${MEDAL[i]||(i+1)+"."}</span> <b class="num">$${(r.pnl||0).toLocaleString(undefined,{maximumFractionDigits:0})}</b> <span class="mut">· ${((r.win_rate||0)*100).toFixed(0)}% win · ${r.trades||0} trades</span><br>
-    <span class="mono">${r.address.slice(0,22)}…</span></div>
+    <span class="mono addr" onclick="copy('${r.address}',this)" title="tap to copy address">${r.address}</span></div>
     <button class="copy" onclick="copy('/draft ${r.address}',this)">/draft</button></div>`).join("")}
   if(rec.dossiers){const rate=rec.graded?`${rec.hits}/${rec.graded} (${Math.round(rec.hits/rec.graded*100)}%)`:"—";
     $("hitrate").textContent=`Hit rate: ${rate}`;$("c-hit").textContent=rate;
